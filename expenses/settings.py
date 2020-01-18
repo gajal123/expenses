@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shops',
+    'rest_framework',
 ]
 
 AUTH_USER_MODEL = 'shops.User'

@@ -1,8 +1,17 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Store, Item, Purchase
+from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer
+from rest_framework import viewsets
 
-# Create your views here.
+class StoreViewSet(viewsets.ModelViewSet):
+    queryset = Store.objects.all()
+    serializer_class = StoreSerializer
 
 
-def index(request):
-    return HttpResponse('testing')
+class ItemViewSet(viewsets.ModelViewSet):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+
+class PurchaseViewSet(viewsets.ModelViewSet):
+    queryset = Purchase.objects.all()
+    serializer_class = PurchaseSerializer

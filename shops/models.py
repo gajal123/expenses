@@ -20,6 +20,9 @@ class Store(models.Model):
     class Meta:
         db_table = 'stores'
 
+    def __str__(self):
+        return f"Name: {self.name}\n City: {self.city}\n Items: {self.items}"
+
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
