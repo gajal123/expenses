@@ -66,8 +66,6 @@ $(document).ready( function(){
                                 </div>
                             </div>
                             <table class="table mt-30"><tbody>`
-                        // <p>${elem.city}</p>
-                        // <h4>Rs. 11,250.00</h4>
                     
                 elem.items.forEach(function(item, index){
                     item_name = item.name;
