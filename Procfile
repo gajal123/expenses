@@ -1,1 +1,1 @@
-web: python expenses/manage.py runserver 0.0.0.0:8000
+web: gunicorn expenses.wsgi --log-file -
