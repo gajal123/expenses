@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from shops.models import User, Store, Item, Purchase
+from shops.models import User, Store, Item, Purchase, PaymentOutstanding
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
@@ -18,4 +18,9 @@ class ItemAdmin(admin.ModelAdmin):
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PaymentOutstanding)
+class PaymentOutstandingAdmin(admin.ModelAdmin):
     pass

@@ -38,13 +38,25 @@ class Item(models.Model):
 class Purchase(models.Model):
     user = models.ForeignKey(User, related_name='created_purchase', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, related_name='purchased_item', on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
     store = models.ForeignKey(Store, related_name='purchased_from_store', on_delete=models.CASCADE)
     date_of_purchase = models.DateTimeField(auto_now_add=True)
-    paid = models.BooleanField(default=False)
     entry_type = models.CharField(max_length=100)
 
     class Meta:
         db_table = 'purchases'
 
     def __str__(self):
-        return f" user {self.user}: Item {self.item.name}. from store: {self.store.name}. Paid: {self.paid}"
+        return f" user {self.user.username}: Item {self.item.name}. from store: {self.store.name}. Quantity {self.quantity}"
+
+
+class PaymentOutstanding(models.Model):
+    user = models.ForeignKey(User, related_name='created_payment', on_delete=models.CASCADE)
+    store = models.ForeignKey(Store, related_name='created_store_payment', on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    class Meta:
+        db_table = 'payment_outstanding'
+
+    def __str__(self):
+        return f" User {self.user.username}: {self.amount} from store {self.store.name}"

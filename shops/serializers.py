@@ -1,32 +1,38 @@
 from rest_framework import serializers
-from .models import Store, Item, Purchase, User
+from .models import Store, Item, Purchase, User, PaymentOutstanding
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username']
+        fields = '__all__'
 
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ['id', 'name', 'price', 'created_at']
+        fields = '__all__'
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
+    # created_by = UserSerializer(read_only=True)
     items = ItemSerializer(many=True)
     class Meta:
         model = Store
-        fields = ['id', 'name', 'address', 'city', 'items', 'created_by', 'followed_by', 'created_at']
+        fields = '__all__'
 
+
+class PaymentOutstandingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentOutstanding
+        fields = '__all__'
 
 
 class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
-        fields = ['id', 'user', 'item', 'store', 'date_of_purchase', 'paid', 'entry_type']
+        fields = ('id', 'user', 'item', 'quantity', 'store', 'date_of_purchase', 'entry_type')
+
 
 
 
