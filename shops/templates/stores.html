@@ -1,0 +1,30 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stores</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="{% static 'js/stores.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        <h1> Stores</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">City</th>
+                    <th scope="col">Items</th>
+                    <th scope="col">No of followers</th>
+                </tr>
+            </thead>
+            <tbody id="store_table">
+
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
