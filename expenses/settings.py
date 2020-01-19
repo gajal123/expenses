@@ -26,7 +26,7 @@ SECRET_KEY = 'h6ita3c87d-ap^evz#v86**jj_z6peune)o)gt-2dohh)$ua+f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['gazal-expenses.herokuapp.com', 'localhost']
 
 
 # Application definition
