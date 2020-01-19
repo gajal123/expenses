@@ -15,7 +15,6 @@
 .box-customn .info-area{
     width:100%;
     float:left;
-    text-align:center;
 }
 .box-customn .info-area h3{
     margin: 0px;
@@ -34,7 +33,6 @@
 }
 
 .box-customn .info-area h4{
-    color: #ff0000;
     font-weight: bold;
     line-height: 30px;
     font-size: 25px;
@@ -49,6 +47,27 @@
 .box-customn:hover a.nohover{display:none;}
 
 
+.qty .count {
+    color: #000;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 2px;
+    width: 50px;
+}
+
+
 .mt-30{
     margin-top: 30px;
+}
+
+#item_purchase{
+    cursor: pointer;
+}
+
+.amount_payable{
+    color: #5369bb;
+    font-weight: bold;
+    line-height: 30px;
+    font-size: 25px;
+    float: right;
 }

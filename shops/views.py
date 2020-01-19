@@ -40,12 +40,11 @@ class PurchaseItem(APIView):
             purchase_serializer = PurchaseSerializer(data=data)
             user = User.objects.get(id=request.user.id)
             store = Store.objects.get(id=data['store'])
-            amount = data['amount'] * data.get('quantity', 1)
+            amount = data['amount'] * int(data.get('quantity', 1))
             payment_outstanding, created = PaymentOutstanding.objects.get_or_create(user=user, store=store)
             payment_outstanding.amount += amount
             payment_outstanding.save()
-            print('here')
-            # purchase_serializer.outstanding_amount = payment_outstanding.amount
+
             if purchase_serializer.is_valid():
                 purchase_serializer.save()
                 serialized_data = copy(purchase_serializer.data)

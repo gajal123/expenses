@@ -5,6 +5,7 @@ var username = 'gazal'
     
     
 function add_item(store_id, item_id, amount){
+    var quantity = $(`#quantity_${store_id}${item_id}`).val();
     $.ajax({
         url: api_url + "purchase/",
         contentType: "application/json",
@@ -15,7 +16,7 @@ function add_item(store_id, item_id, amount){
             store: store_id,
             item: item_id,
             amount: amount,
-            quantity: 1
+            quantity: quantity
         }),
         dataType: "json",
         type: "POST",
@@ -28,6 +29,13 @@ function add_item(store_id, item_id, amount){
             console.log(error);
         }
     })
+}
+
+function quantity_change(item_id, store_id, unit_price){
+    var quantity = $(`#quantity_${store_id}${item_id}`).val();
+    console.log(unit_price * quantity)
+    $(`#price_${store_id}${item_id}`).html((unit_price * quantity).toFixed(2));
+
 }
 
 $(document).ready( function(){
@@ -49,8 +57,14 @@ $(document).ready( function(){
                 `<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		            <div class="box-customn">
                         <div class="info-area">
-                            <h3>${elem.name}</h3>
-                            Amount  Payable: <span id=store_${elem.id}>${elem.outstanding_amount}</span>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <h4>${elem.name}</h4>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <span class="amount_payable">Rs. <span id=store_${elem.id}>${elem.outstanding_amount}</span></span>
+                                </div>
+                            </div>
                             <table class="table mt-30"><tbody>`
                         // <p>${elem.city}</p>
                         // <h4>Rs. 11,250.00</h4>
@@ -60,10 +74,16 @@ $(document).ready( function(){
                     item_price = item.price
                     single_store_html = single_store_html + `
                     <tr>
-                        <td>${item_name}</td>
-                        <td>${item_price}</td>
-                        <td><a class="add" onclick="add_item(${elem.id}, ${item.id}, ${item.price})" title="Add" data-toggle="tooltip"><i class="fa fa-plus" aria-hidden="true"></i></a></td>
-                        <td></td>
+                        <td style="width: 70%">${item_name}</td>
+                        <td id=price_${elem.id}${item.id} style="width: 10%">${item_price}</td>
+                        <td style="width: 10%">
+                            <div class="qty mt-5">
+                                <input type="number" class="count" id=quantity_${elem.id}${item.id} name="qty" value="1" onchange="quantity_change(${item.id}, ${elem.id}, ${item.price})">
+                            </div>
+                        </td>
+                        <td style="width: 10%">
+                            <button type="button" class="btn btn-success" onclick="add_item(${elem.id}, ${item.id}, ${item.price})">Purchase</button>
+                        </td>
                     </tr>`
                 })
                 single_store_html = single_store_html + `</tbody></table></div></div></div>`
