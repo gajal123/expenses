@@ -46,6 +46,7 @@ AUTH_USER_MODEL = 'shops.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,11 +54,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-MIDDLEWARE_CLASSES = (
-    # Simplified static file serving.
-    # https://warehouse.python.org/project/whitenoise/
-    'whitenoise.middleware.WhiteNoiseMiddleware')
 
 ROOT_URLCONF = 'expenses.urls'
 
@@ -156,6 +152,6 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
