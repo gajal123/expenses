@@ -1,8 +1,8 @@
 var username = 'gazal'
     var password = 'qwerty123'
     var api_url = "/api/"
-    var auth_token = 'Bearer ' + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTc5NTA5Mzk2LCJqdGkiOiI4Nzk3Y2M4NzE1NDc0ZGRjOGFjNTk3NzcyZDIyZjNiYSIsInVzZXJfaWQiOjF9.Ua1mbT9dHJH0Vanloo-_mb0jlYpsJ3UM0dn_mSzGvKc'
-    
+    var auth_token = 'Bearer ' + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTc5NTkxMzE4LCJqdGkiOiIwYmI5MjQ0MTZlOWY0OTViODUzODYxOTczOGIzZjFjNiIsInVzZXJfaWQiOjF9.xboHeOGgyfMW4i-eswkSXUctee_9SCSkw0Zf8py-lsQ'
+
     
 function add_item(store_id, item_id, amount){
     var quantity = $(`#quantity_${store_id}${item_id}`).val();
