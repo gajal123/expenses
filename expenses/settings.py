@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'h6ita3c87d-ap^evz#v86**jj_z6peune)o)gt-2dohh)$ua+f'
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'h6ita3c87d-ap^evz#v86**jj_z6peune)o)gt-2dohh)$ua+f')
+SECRET_KEY = 'h6ita3c87d-ap^evz#v86**jj_z6peune)o)gt-2dohh)$ua+f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
@@ -119,8 +119,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
 
