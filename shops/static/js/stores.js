@@ -2,6 +2,7 @@ var username = 'gazal'
     var password = 'qwerty123'
     var api_url = "/api/"
     var auth_token = 'Bearer ' + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTc5NTkyMjQ3LCJqdGkiOiJiMGEzMGM5NGM4NGI0NDY4YmU3NjcxOTlmOTk1YjAwZSIsInVzZXJfaWQiOjF9.14Byb7cocWmzocKTw3gFNDqsWb8YUhyPBqyWhZbI5T0'
+    console.log(auth_token);
 
     
 function add_item(store_id, item_id, amount){
