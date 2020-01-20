@@ -1,10 +1,8 @@
 var username = 'gazal'
-    var password = 'qwerty123'
-    var api_url = "/api/"
-    var auth_token = 'Bearer ' + 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNTc5OTM4NDc5LCJqdGkiOiI5ZTM0ZGZhYWE0OTI0MTEzOTdiM2JhOTg3N2VjNTZkYSIsInVzZXJfaWQiOjF9.kbPHWsxyEjkghutpmZdtOi_tn9b1FZdu2Px-VbHSZF8'
-    console.log(auth_token);
+var password = 'qwerty123'
+var api_url = "/api/"
+var auth_token = 'Bearer '
 
-    
 function purchase_item(store_id, item_id, amount){
     var quantity = $(`#quantity_${store_id}${item_id}`).val();
     $.ajax({
@@ -78,8 +76,7 @@ function quantity_change(item_id, store_id, unit_price){
 
 }
 
-$(document).ready( function(){
-
+function get_user_stores(){
     $.ajax({
         url: api_url + 'user_stores',
         contentType: "application/json",
@@ -93,7 +90,7 @@ $(document).ready( function(){
             var single_store_html = ``
             result.forEach(function(store, index){
                 var store_id = `store_${store.id}`
-                single_store_html = single_store_html + 
+                single_store_html = single_store_html +
                 `<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		            <div class="box-customn">
                         <div class="info-area">
@@ -106,7 +103,7 @@ $(document).ready( function(){
                                 </div>
                             </div>
                             <table class="table mt-30"><tbody>`
-                    
+
                 store.items.forEach(function(item, index){
                     item_name = item.name;
                     item_price = item.price
@@ -138,4 +135,27 @@ $(document).ready( function(){
             $(".shops_listing").html(single_store_html)
         }
     })
+}
+
+$(document).ready( function(){
+    $.ajax({
+        url: api_url + 'token/',
+        contentType: "application/json",
+        method: 'POST',
+        data: JSON.stringify({
+            username: username,
+            password: password
+        }),
+        success: function(result){
+            auth_token = auth_token + result.access;
+            console.log(auth_token);
+            get_user_stores()
+        }
+    });
+//    $("#new_store").click(function(){
+//        console.log('here');
+//    })
+
+
+
 });
