@@ -28,9 +28,11 @@ class Item(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, related_name='created_item', null=True, on_delete=models.SET_NULL)
 
     class Meta:
         db_table = 'items'
+        unique_together = (('name', 'price'),)
 
     def __str__(self):
         return f" name: {self.name}. Price: {self.price}"

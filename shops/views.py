@@ -16,9 +16,36 @@ class StoreViewSet(viewsets.ModelViewSet):
     serializer_class = StoreSerializer
 
 
-class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+class UserItem(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self,request,  *args, **kwargs):
+        purchases = Item.objects.filter(user=request.user.id)
+        serializer = ItemSerializer(purchases, many=True)
+        return Response(serializer.data)
+
+    @transaction.atomic()
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            data['user'] = request.user.id
+            item_serializer = ItemSerializer(data=data)
+            store = Store.objects.filter(pk=data['store'], items__name=data['name'], items__price=data['price'])
+            saved = False
+            if item_serializer.is_valid():
+                item_serializer.save()
+                saved = True
+            if not store:
+                item = Item.objects.get(name=data['name'], price=data['price'])
+                Store.objects.get(pk=data['store']).items.add(item)
+                saved = True
+            if saved:
+                return Response(item_serializer.data, status=status.HTTP_200_OK)
+            return Response({"error": "item already exists"}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PurchaseItem(APIView):

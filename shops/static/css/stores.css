@@ -71,3 +71,7 @@
     font-size: 25px;
     float: right;
 }
+
+#item_add_error{
+    color: red;
+}
