@@ -28,7 +28,7 @@ class UserItem(APIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            data['user'] = request.user.id
+            data['created_by'] = request.user.id
             item_serializer = ItemSerializer(data=data)
             store = Store.objects.filter(pk=data['store'], items__name=data['name'], items__price=data['price'])
             saved = False
@@ -94,7 +94,32 @@ class UserStores(APIView):
             payment_outstanding = PaymentOutstanding.objects.filter(store=store['id'], user=request.user.id)
             if payment_outstanding:
                 store['outstanding_amount'] = payment_outstanding[0].amount
+
+            for idx, item_id in enumerate(store.get('items')):
+                item = Item.objects.get(pk=item_id)
+                item_serializer = ItemSerializer(item)
+                store['items'][idx] = item_serializer.data
         return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            data['created_by'] = request.user.id
+            data['followed_by'] = [request.user.id]
+            outstanding_amount = data['outstanding_amount']
+            serializer = StoreSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                if outstanding_amount:
+                    PaymentOutstanding.objects.create(user=User.objects.get(pk=request.user.id), store=Store.objects.get(pk=serializer.data['id']), amount=outstanding_amount)
+            else:
+                print(serializer.errors)
+                return Response({'error': serializer.errors})
+            return Response(serializer.data)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 def stores(request):

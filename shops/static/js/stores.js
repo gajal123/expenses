@@ -137,6 +137,46 @@ function get_user_stores(){
     })
 }
 
+function add_new_store(){
+    $("#store_add_error").css("visibility", "hidden");
+    store_name = $("#new_shop_name").val();
+    store_city = $("#new_shop_city").val();
+    outstanding_amount = $("#new_shop_outstanding_amount").val();
+    if(store_name == '' || store_city == ''){
+        $("#store_add_error").css("visibility", "visible");
+        return;
+    }
+    if(outstanding_amount == ''){
+        outstanding_amount = 0;
+    }
+    $.ajax({
+        url: api_url + 'user_stores/',
+        contentType: 'application/json',
+        headers: {
+            'Authorization': auth_token
+        },
+        method: 'POST',
+        data: JSON.stringify({
+            name: store_name,
+            city: store_city,
+            address: store_city,
+            item_name: 'test',
+            item_price: 10,
+            outstanding_amount: outstanding_amount
+        }),
+        success: function(response){
+            console.log(response);
+            location.reload(true);
+
+        },
+        error: function(response){
+            console.log(response);
+        }
+
+
+    })
+}
+
 $(document).ready( function(){
     $.ajax({
         url: api_url + 'token/',
@@ -152,9 +192,37 @@ $(document).ready( function(){
             get_user_stores()
         }
     });
-//    $("#new_store").click(function(){
-//        console.log('here');
-//    })
+    $("#new_store").click(function(){
+    $("#new_store").attr("disabled", true);
+          var new_store_html = $(".shops_listing").html();
+          new_store_html = `
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		            <div class="box-customn">
+                        <div class="info-area">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <input class="form-control" id="new_shop_name" placeholder="Enter shop name">
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <input class="form-control" id="new_shop_city" placeholder="Enter shop city">
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-12">
+                                    <input class="form-control" id="new_shop_outstanding_amount" placeholder="Outstanding amount">
+                                </div>
+                                <div class="col-lg-2 col-md-6 col-sm-12">
+                                    <button type="button" class="btn btn-success" onclick="add_new_store()">Add Store</button>
+                                </div><br/><br/>
+                                <div class="col-lg-12 col-md-16 col-sm-12">
+                                    <div id="store_add_error" style="color:red; visibility: hidden"> Enter Shop name and city</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+          ` + new_store_html
+          $(".shops_listing").html(new_store_html);
+    })
 
 
 

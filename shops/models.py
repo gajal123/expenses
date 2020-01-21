@@ -12,9 +12,9 @@ class Store(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField()
     city = models.CharField(max_length=100)
-    items = models.ManyToManyField("Item", related_name='stores')
+    items = models.ManyToManyField("Item", related_name='stores', blank=True, default=[])
     created_by = models.ForeignKey(User, related_name='created_stores', null=True, on_delete=models.SET_NULL)
-    followed_by = models.ManyToManyField(User, related_name='followed_stores')
+    followed_by = models.ManyToManyField(User, related_name='followed_stores', blank=True, default=[])
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
