@@ -132,9 +132,12 @@ class UserPayments(APIView):
             data = request.data
             amount = int(data['amount'])
             print(data)
-            payment_outstanding, created = PaymentOutstanding.objects.get_or_create(user=request.user.id, store=data['store'])
+            user = User.objects.get(pk=request.user.id)
+            store = Store.objects.get(pk=data['store'])
+            payment_outstanding, created = PaymentOutstanding.objects.get_or_create(user=user, store=store)
             payment_outstanding.amount -= amount
             payment_outstanding.save()
+            Purchase.objects.create(user=user, store=store, entry_type='payment')
             return Response({'outstanding_amount': payment_outstanding.amount}, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)

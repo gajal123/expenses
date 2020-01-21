@@ -39,7 +39,7 @@ class Item(models.Model):
 
 class Purchase(models.Model):
     user = models.ForeignKey(User, related_name='created_purchase', on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, related_name='purchased_item', on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, related_name='purchased_item', on_delete=models.CASCADE, blank=True, null=True, default=None)
     quantity = models.IntegerField(default=1)
     store = models.ForeignKey(Store, related_name='purchased_from_store', on_delete=models.CASCADE)
     date_of_purchase = models.DateTimeField(auto_now_add=True)
