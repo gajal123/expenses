@@ -134,18 +134,18 @@ function get_user_stores(){
 		            <div class="box-customn">
                         <div class="info-area">
                             <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
                                     <h4>${store.name}</h4>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
                                     <div class="row" id="payment">
                                         <div class="col-lg-12 col-md-12 col-sm-12">
                                             <span class="amount_payable">Rs. <span id=store_balance_${store.id}>${store.outstanding_amount}</span>
-                                            <button type="button" class="btn btn-success" onclick="toggle_open_payment(${store.id})">Pay Custom</button>
+                                            <button type="button" class="btn btn-success" onclick="toggle_open_payment(${store.id})">Make Payment</button>
                                             </span>
-                                        </div><br/><br/><br/>
+                                        </div>
                                         <div class="col-lg-12 col-md-12 col-sm-12">
-                                            <div id=pay_custom_amount_${store.id} style="display: none">
+                                            <div class="mt-30" id=pay_custom_amount_${store.id} style="display: none">
                                                 <input class="form-control" id=payable_amount_${store.id} placeholder="Amount">
                                                 <div id=payment_error_${store.id} style="color: red;display:none">Add Amount</div><br/>
                                                 <button type="button" class="btn btn-success" onclick="make_payment(${store.id})">Pay</button>
@@ -176,10 +176,10 @@ function get_user_stores(){
                 })
                 single_store_html = single_store_html +
                     `<tr>
-                        <td><input class="form-control" id=new_item_name_${store.id} placeholder=" Item name"></td>
-                        <td><input class="form-control"id=new_item_price_${store.id} placeholder="Price"></td>
-                        <td></td>
-                        <td><button type="button" class="btn btn-success" onclick="add_new_item(${store.id})">Add Item</button></td>
+                        <td style="width: 70%"><input class="form-control" id=new_item_name_${store.id} placeholder=" Item name"></td>
+                        <td style="width: 10%"><input class="form-control"id=new_item_price_${store.id} placeholder="Price"></td>
+                        <td style="width: 10%"></td>
+                        <td style="width: 10%"><button type="button" class="btn btn-success" onclick="add_new_item(${store.id})">Add Item</button></td>
 
                     </tr>
                     <tr><td id=item_add_error_${store.id} style="color: red;visibility:hidden">Add Item name and Price</td></tr>`
