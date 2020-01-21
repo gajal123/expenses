@@ -49,7 +49,7 @@ class Purchase(models.Model):
         db_table = 'purchases'
 
     def __str__(self):
-        return f" user {self.user.username}: Item {self.item.name}. from store: {self.store.name}. Quantity {self.quantity}"
+        return f" user {self.user.username}: Item {self.item}. from store: {self.store.name}. Quantity {self.quantity} Payment type {self.entry_type}"
 
 
 class PaymentOutstanding(models.Model):
