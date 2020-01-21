@@ -156,6 +156,6 @@ def stores(request):
     user = authenticate(request, username=username, password=password)
     if user is not None:
         print('logging in user')
-        login(request, user)
+        # login(request, user)
         return render(request, 'stores.html', {'username': username, 'password': password})
     return render(request, 'login.html', {'error': 'Invalid Username/password'})

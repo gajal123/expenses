@@ -13,7 +13,8 @@ function purchase_item(store_id, item_id, amount){
             store: store_id,
             item: item_id,
             amount: amount,
-            quantity: quantity
+            quantity: quantity,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
         }),
         dataType: "json",
         type: "POST",
@@ -48,7 +49,8 @@ function add_new_item(store_id){
         data: JSON.stringify({
             name: item_name,
             price: item_price,
-            store: store_id
+            store: store_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
         }),
         success: function(result){
             if(result.error){
@@ -101,7 +103,8 @@ function make_payment(store_id){
         },
         data: JSON.stringify({
             amount: amount,
-            store: store_id
+            store: store_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
         }),
         success: function(response){
             console.log(response)
@@ -212,7 +215,8 @@ function add_new_store(){
             address: store_city,
             item_name: 'test',
             item_price: 10,
-            outstanding_amount: outstanding_amount
+            outstanding_amount: outstanding_amount,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
         }),
         success: function(response){
             console.log(response);
