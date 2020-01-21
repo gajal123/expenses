@@ -121,6 +121,28 @@ class UserStores(APIView):
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserPayments(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            amount = int(data['amount'])
+            print(data)
+            payment_outstanding, created = PaymentOutstanding.objects.get_or_create(user=request.user.id, store=data['store'])
+            payment_outstanding.amount -= amount
+            payment_outstanding.save()
+            return Response({'outstanding_amount': payment_outstanding.amount}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class PaymenOutstandingViewSet(viewsets.ModelViewSet):
+    queryset = PaymentOutstanding.objects.all()
+    serializer_class = PaymentOutstandingSerializer
+
 
 def stores(request):
     return render(request, 'stores.html')

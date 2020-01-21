@@ -22,7 +22,7 @@ function purchase_item(store_id, item_id, amount){
         success: function(result){
 
             console.log(result.outstanding_amount)
-            $(`#store_${store_id}`).html(result.outstanding_amount);
+            $(`#store_balance_${store_id}`).html(result.outstanding_amount);
         },
         error: function(error){
             console.log(error);
@@ -76,6 +76,44 @@ function quantity_change(item_id, store_id, unit_price){
 
 }
 
+
+function toggle_open_payment(store_id){
+    var x = document.getElementById(`pay_custom_amount_${store_id}`);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+}
+
+
+function make_payment(store_id){
+    $(`#payment_error_${store_id}`).css("display", "none")
+    var amount = $(`#payable_amount_${store_id}`).val()
+    if(amount == ''){
+        $(`#payment_error_${store_id}`).css("display", "block")
+        return;
+    }
+    $.ajax({
+        url: api_url + 'user_payment/',
+        contentType: 'application/json',
+        method: 'POST',
+        headers: {
+            'Authorization': auth_token
+        },
+        data: JSON.stringify({
+            amount: amount,
+            store: store_id
+        }),
+        success: function(response){
+            console.log(response)
+            $(`#store_balance_${store_id}`).html(response.outstanding_amount);
+            toggle_open_payment(store_id);
+
+        }
+
+    })
+}
 function get_user_stores(){
     $.ajax({
         url: api_url + 'user_stores',
@@ -99,7 +137,21 @@ function get_user_stores(){
                                     <h4>${store.name}</h4>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <span class="amount_payable">Rs. <span id=store_${store.id}>${store.outstanding_amount}</span></span>
+                                    <div class="row" id="payment">
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <span class="amount_payable">Rs. <span id=store_balance_${store.id}>${store.outstanding_amount}</span>
+                                            <button type="button" class="btn btn-success" onclick="toggle_open_payment(${store.id})">Pay Custom</button>
+                                            </span>
+                                        </div><br/><br/><br/>
+                                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                            <div id=pay_custom_amount_${store.id} style="display: none">
+                                                <input class="form-control" id=payable_amount_${store.id} placeholder="Amount">
+                                                <div id=payment_error_${store.id} style="color: red;display:none">Add Amount</div><br/>
+                                                <button type="button" class="btn btn-success" onclick="make_payment(${store.id})">Pay</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <table class="table mt-30"><tbody>`
@@ -123,8 +175,8 @@ function get_user_stores(){
                 })
                 single_store_html = single_store_html +
                     `<tr>
-                        <td><input id=new_item_name_${store.id} placeholder=" Item name"></td>
-                        <td><input id=new_item_price_${store.id} placeholder="Price"></td>
+                        <td><input class="form-control" id=new_item_name_${store.id} placeholder=" Item name"></td>
+                        <td><input class="form-control"id=new_item_price_${store.id} placeholder="Price"></td>
                         <td></td>
                         <td><button type="button" class="btn btn-success" onclick="add_new_item(${store.id})">Add Item</button></td>
 

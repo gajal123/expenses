@@ -69,7 +69,11 @@
     font-weight: bold;
     line-height: 30px;
     font-size: 25px;
+}
+
+#payment{
     float: right;
+    width: 50%;
 }
 
 #item_add_error{
