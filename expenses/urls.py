@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include('shops.urls')),
     path('api/', include(router.urls)),
     path('api/stores/', views.StoreView.as_view(), name='all_stores'),
+    path('api/stores/<int:pk>/', views.StoreDetailView.as_view(), name='single_store'),
     path('api/user_payment/', views.UserPayments.as_view(), name='user_payment'),
     path('api/purchase/', views.PurchaseItem.as_view(), name='purchase'),
     path('api/items/', views.UserItem.as_view(), name='purchase'),

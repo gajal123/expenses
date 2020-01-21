@@ -1,18 +1,18 @@
-import json
+from copy import copy
 
-from django.contrib.auth import authenticate, login
-
-from .models import Store, Item, Purchase, User, PaymentOutstanding
-from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer
+from django.contrib.auth import authenticate
+from django.shortcuts import render
+from django.db import transaction
+from django.http import Http404
 from rest_framework import viewsets
-from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
-from copy import copy
 from rest_framework import status
-from django.db import transaction
+
+from .models import Store, Item, Purchase, User, PaymentOutstanding
+from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer
+
 
 class StoreView(APIView):
 
@@ -49,6 +49,38 @@ class StoreView(APIView):
         except Exception as e:
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StoreDetailView(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Store.objects.get(pk=pk)
+        except Store.DoesNotExist:
+            raise Http404
+
+
+    def get(self, request, pk, format=None):
+        store = self.get_object(pk)
+        serializer = StoreSerializer(store)
+        return Response(serializer.data)
+
+    def patch(self, request, pk, format=None):
+        data = request.data
+        user = request.user.id
+        store = self.get_object(pk)
+        if data.get('add_user'):
+            store.followed_by.add(user)
+        if data.get('remove_user'):
+            store.followed_by.remove(user)
+
+        serializer = StoreSerializer(store, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            print(serializer.errors)
+            return Response({'error': serializer.errors})
 
 
 class UserItem(APIView):

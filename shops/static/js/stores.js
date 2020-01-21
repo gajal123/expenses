@@ -126,11 +126,11 @@ function get_all_stores(){
         },
         method: 'GET',
         success: function(result){
-            console.log(result);
             var single_store_html = ``
             result.forEach(function(store, index){
                 var store_id = `store_${store.id}`
                 var users = store.followed_by;
+                store_names.push(store.name);
                 if(users.indexOf(user_id) != -1){
                     single_store_html = single_store_html +
                     `<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
