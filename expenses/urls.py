@@ -5,14 +5,14 @@ from shops import views
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = routers.DefaultRouter()
-router.register(r'stores', views.StoreViewSet)
+# router.register(r'stores', views.StoreViewSet)
 router.register(r'payments', views.PaymenOutstandingViewSet)
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
     path('', include('shops.urls')),
     path('api/', include(router.urls)),
-    path('api/user_stores/', views.UserStores.as_view(), name='user_stores'),
+    path('api/stores/', views.StoreView.as_view(), name='all_stores'),
     path('api/user_payment/', views.UserPayments.as_view(), name='user_payment'),
     path('api/purchase/', views.PurchaseItem.as_view(), name='purchase'),
     path('api/items/', views.UserItem.as_view(), name='purchase'),
