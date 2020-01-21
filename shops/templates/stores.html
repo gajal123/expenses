@@ -7,7 +7,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="{% static 'js/stores.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/stores.css' %}">
 </head>
 <body>
@@ -24,3 +23,9 @@
 
 </body>
 </html>
+
+<script>
+    var username = "{{ username }}"
+    var password = "{{ password }}"
+</script>
+<script src="{% static 'js/stores.js' %}"></script>

@@ -1,5 +1,3 @@
-var username = 'gazal'
-var password = 'qwerty123'
 var api_url = "/api/"
 var auth_token = 'Bearer '
 
@@ -230,6 +228,7 @@ function add_new_store(){
 }
 
 $(document).ready( function(){
+    console.log(username)
     $.ajax({
         url: api_url + 'token/',
         contentType: "application/json",
@@ -240,7 +239,6 @@ $(document).ready( function(){
         }),
         success: function(result){
             auth_token = auth_token + result.access;
-            console.log(auth_token);
             get_user_stores()
         }
     });

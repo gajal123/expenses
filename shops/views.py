@@ -1,12 +1,15 @@
 import json
+
+from django.contrib.auth import authenticate, login
+
 from .models import Store, Item, Purchase, User, PaymentOutstanding
 from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer
 from rest_framework import viewsets
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db.models import F
+from django.views.decorators.csrf import csrf_exempt
 from copy import copy
 from rest_framework import status
 from django.db import transaction
@@ -144,8 +147,15 @@ class PaymenOutstandingViewSet(viewsets.ModelViewSet):
     serializer_class = PaymentOutstandingSerializer
 
 
-def stores(request):
-    return render(request, 'stores.html')
-
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'login.html')
+
+def stores(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        print('logging in user')
+        login(request, user)
+        return render(request, 'stores.html', {'username': username, 'password': password})
+    return render(request, 'login.html', {'error': 'Invalid Username/password'})
