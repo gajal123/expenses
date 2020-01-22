@@ -29,6 +29,7 @@ class Item(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='created_item', null=True, on_delete=models.SET_NULL)
+    followed_by = models.ManyToManyField(User, related_name='followed_items', blank=True, default=[])
 
     class Meta:
         db_table = 'items'
