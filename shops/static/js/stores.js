@@ -65,7 +65,7 @@ function add_new_item(store_id){
             }
         },
         error: function(res){
-
+            console.log(res);
         }
     })
 

@@ -12,7 +12,6 @@ class Store(models.Model):
     name = models.CharField(max_length=100)
     address = models.TextField()
     city = models.CharField(max_length=100)
-    items = models.ManyToManyField("Item", related_name='stores', blank=True, default=[])
     created_by = models.ForeignKey(User, related_name='created_stores', null=True, on_delete=models.SET_NULL)
     followed_by = models.ManyToManyField(User, related_name='followed_stores', blank=True, default=[])
     created_at = models.DateTimeField(auto_now_add=True)
@@ -21,7 +20,7 @@ class Store(models.Model):
         db_table = 'stores'
 
     def __str__(self):
-        return f"Name: {self.name}\n City: {self.city}\n Items: {self.items}"
+        return f"Name: {self.name}\n City: {self.city}\n"
 
 
 class Item(models.Model):
@@ -29,11 +28,13 @@ class Item(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, related_name='created_item', null=True, on_delete=models.SET_NULL)
-    followed_by = models.ManyToManyField(User, related_name='followed_items', blank=True, default=[])
+    followed_by = models.ManyToManyField(User, related_name='followed_items', blank=True, default=[], null=True)
+    store = models.ForeignKey(Store, related_name='has_items', on_delete=models.CASCADE, default=None)
 
     class Meta:
         db_table = 'items'
-        unique_together = (('name', 'price'),)
+
+        unique_together = ('name', 'store',)
 
     def __str__(self):
         return f" name: {self.name}. Price: {self.price}"

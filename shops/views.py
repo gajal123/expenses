@@ -11,24 +11,23 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Store, Item, Purchase, User, PaymentOutstanding
-from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer
+from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer, UserSerializer
 
 
-class StoreView(APIView):
+class StoreListView(APIView):
 
     def get(self, request, *args, **kwargs):
         stores = Store.objects.filter()
         serializer = StoreSerializer(stores, many=True)
         for store in serializer.data:
+            items = Item.objects.filter(store__id = store['id'])
+            item_serializer = ItemSerializer(items, many=True)
             store['outstanding_amount'] = 0
+            store['items'] = item_serializer.data
+
             payment_outstanding = PaymentOutstanding.objects.filter(store=store['id'], user=request.user.id)
             if payment_outstanding:
                 store['outstanding_amount'] = payment_outstanding[0].amount
-
-            for idx, item_id in enumerate(store.get('items')):
-                item = Item.objects.get(pk=item_id)
-                item_serializer = ItemSerializer(item)
-                store['items'][idx] = item_serializer.data
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
@@ -40,8 +39,12 @@ class StoreView(APIView):
             serializer = StoreSerializer(data=data)
             if serializer.is_valid():
                 serializer.save()
-                if outstanding_amount:
-                    PaymentOutstanding.objects.create(user=User.objects.get(pk=request.user.id), store=Store.objects.get(pk=serializer.data['id']), amount=outstanding_amount)
+                payment_serializer = PaymentOutstandingSerializer(data={'user': request.user.id, 'store': serializer.data['id'], 'amount': outstanding_amount})
+                if payment_serializer.is_valid():
+                    payment_serializer.save()
+                else:
+                    print(payment_serializer.errors )
+                    return Response({'error': payment_serializer.errors})
             else:
                 print(serializer.errors)
                 return Response({'error': serializer.errors})
@@ -83,12 +86,12 @@ class StoreDetailView(APIView):
             return Response({'error': serializer.errors})
 
 
-class UserItem(APIView):
+class ItemListView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self,request,  *args, **kwargs):
-        purchases = Item.objects.filter(user=request.user.id)
-        serializer = ItemSerializer(purchases, many=True)
+        items = Item.objects.filter()
+        serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
 
     @transaction.atomic()
@@ -96,19 +99,15 @@ class UserItem(APIView):
         try:
             data = request.data
             data['created_by'] = request.user.id
+            data['followed_by'] = [request.user.id]
             item_serializer = ItemSerializer(data=data)
-            store = Store.objects.filter(pk=data['store'], items__name=data['name'], items__price=data['price'])
-            saved = False
             if item_serializer.is_valid():
                 item_serializer.save()
-                saved = True
-            if not store:
-                item = Item.objects.get(name=data['name'], price=data['price'])
-                Store.objects.get(pk=data['store']).items.add(item)
-                saved = True
-            if saved:
                 return Response(item_serializer.data, status=status.HTTP_200_OK)
-            return Response({"error": "item already exists"}, status=status.HTTP_200_OK)
+            else:
+                print(item_serializer.errors)
+                return Response({'error': 'Item already exists', 'info': item_serializer.errors},
+                            status=status.HTTP_200_OK)
 
         except Exception as e:
             print(e)
@@ -130,21 +129,21 @@ class PurchaseItem(APIView):
             data = request.data
             data['user'] = request.user.id
             data['entry_type'] = data.get('entry_type', 'purchase')
-            data['payment_outstanding_model'] = {'user': request.user.id, 'store': data['store']}
-            purchase_serializer = PurchaseSerializer(data=data)
-            user = User.objects.get(id=request.user.id)
-            store = Store.objects.get(id=data['store'])
-            amount = data['amount'] * int(data.get('quantity', 1))
-            payment_outstanding, created = PaymentOutstanding.objects.get_or_create(user=user, store=store)
-            payment_outstanding.amount += amount
-            payment_outstanding.save()
 
+            amount = data['amount'] * int(data.get('quantity', 1))
+            payment = PaymentOutstanding.objects.get(user=data['user'], store=data['store'])
+            payment.amount = payment.amount + amount
+            payment.save()
+
+            purchase_serializer = PurchaseSerializer(data=data)
             if purchase_serializer.is_valid():
                 purchase_serializer.save()
                 serialized_data = copy(purchase_serializer.data)
-                serialized_data.update({'outstanding_amount': payment_outstanding.amount})
+                serialized_data.update({'outstanding_amount': payment.amount})
                 return Response(serialized_data, status=status.HTTP_201_CREATED)
-            return Response(purchase_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                print(purchase_serializer.errors)
+            return Response(purchase_serializer.errors, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -157,10 +156,9 @@ class UserPayments(APIView):
         try:
             data = request.data
             amount = int(data['amount'])
-            print(data)
             user = User.objects.get(pk=request.user.id)
             store = Store.objects.get(pk=data['store'])
-            payment_outstanding, created = PaymentOutstanding.objects.get_or_create(user=user, store=store)
+            payment_outstanding = PaymentOutstanding.objects.get(user=user, store=data['store'])
             payment_outstanding.amount -= amount
             payment_outstanding.save()
             Purchase.objects.create(user=user, store=store, entry_type='payment')
