@@ -7,6 +7,9 @@ class User(AbstractUser):
     class Meta:
         db_table = 'users'
 
+    def __str__(self):
+        return f"{self.id}: {self.username}"
+
 
 class Store(models.Model):
     name = models.CharField(max_length=100)
@@ -20,7 +23,7 @@ class Store(models.Model):
         db_table = 'stores'
 
     def __str__(self):
-        return f"Name: {self.name}\n City: {self.city}\n"
+        return f"Name: {self.name}\n City: {self.city}\n. Followed by: {self.followed_by.all()}"
 
 
 class Item(models.Model):
@@ -38,6 +41,7 @@ class Item(models.Model):
 
     def __str__(self):
         return f" name: {self.name}. Price: {self.price}"
+
 
 class Purchase(models.Model):
     user = models.ForeignKey(User, related_name='created_purchase', on_delete=models.CASCADE)

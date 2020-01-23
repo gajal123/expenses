@@ -11,16 +11,16 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Store, Item, Purchase, User, PaymentOutstanding
-from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer, UserSerializer
+from .serializers import StoreSerializer, ItemSerializer, PurchaseSerializer, PaymentOutstandingSerializer
 
 
 class StoreListView(APIView):
 
     def get(self, request, *args, **kwargs):
-        stores = Store.objects.filter()
-        serializer = StoreSerializer(stores, many=True)
+        all_stores = Store.objects.filter()
+        serializer = StoreSerializer(all_stores, many=True)
         for store in serializer.data:
-            items = Item.objects.filter(store__id = store['id'])
+            items = Item.objects.filter(store__id=store['id'])
             item_serializer = ItemSerializer(items, many=True)
             store['outstanding_amount'] = 0
             store['items'] = item_serializer.data
@@ -43,18 +43,19 @@ class StoreListView(APIView):
                 if payment_serializer.is_valid():
                     payment_serializer.save()
                 else:
-                    print(payment_serializer.errors )
+                    print(payment_serializer.errors)
                     return Response({'error': payment_serializer.errors})
-            else:
-                print(serializer.errors)
-                return Response({'error': serializer.errors})
-            return Response(serializer.data)
+                return Response(serializer.data)
+            print(serializer.errors)
+            return Response({'error': serializer.errors})
+
         except Exception as e:
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StoreDetailView(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self, pk):
         try:
@@ -71,25 +72,26 @@ class StoreDetailView(APIView):
     def patch(self, request, pk, format=None):
         data = request.data
         user = request.user.id
+
         store = self.get_object(pk)
+        user_obj = User.objects.get(id=user)
         if data.get('add_user'):
-            store.followed_by.add(user)
+            store.followed_by.add(user_obj)
         if data.get('remove_user'):
-            store.followed_by.remove(user)
+            store.followed_by.remove(user_obj)
 
         serializer = StoreSerializer(store, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            print(serializer.errors)
-            return Response({'error': serializer.errors})
+        print(serializer.errors)
+        return Response({'error': serializer.errors})
 
 
 class ItemListView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self,request,  *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         items = Item.objects.filter()
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data)
@@ -104,9 +106,8 @@ class ItemListView(APIView):
             if item_serializer.is_valid():
                 item_serializer.save()
                 return Response(item_serializer.data, status=status.HTTP_200_OK)
-            else:
-                print(item_serializer.errors)
-                return Response({'error': 'Item already exists', 'info': item_serializer.errors},
+            print(item_serializer.errors)
+            return Response({'error': 'Item already exists', 'info': item_serializer.errors},
                             status=status.HTTP_200_OK)
 
         except Exception as e:
@@ -117,7 +118,7 @@ class ItemListView(APIView):
 class PurchaseItem(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self,request,  *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         purchases = Purchase.objects.filter(user=request.user.id)
         serializer = PurchaseSerializer(purchases, many=True)
 
@@ -141,8 +142,7 @@ class PurchaseItem(APIView):
                 serialized_data = copy(purchase_serializer.data)
                 serialized_data.update({'outstanding_amount': payment.amount})
                 return Response(serialized_data, status=status.HTTP_201_CREATED)
-            else:
-                print(purchase_serializer.errors)
+            print(purchase_serializer.errors)
             return Response(purchase_serializer.errors, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -176,6 +176,7 @@ class PaymenOutstandingViewSet(viewsets.ModelViewSet):
 def index(request):
     return render(request, 'login.html')
 
+
 def stores(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
@@ -184,3 +185,8 @@ def stores(request):
         print('logging in user')
         return render(request, 'stores.html', {'username': username, 'password': password, 'user_id': user.id})
     return render(request, 'login.html', {'error': 'Invalid Username/password'})
+
+
+def stores_detail(request, store_id):
+    auth_token = request.GET.get('auth_token')
+    return render(request, 'stores_detail.html', {'auth_token': auth_token, 'user_id': request.user.id, 'store_id': store_id})

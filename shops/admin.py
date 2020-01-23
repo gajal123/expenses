@@ -11,10 +11,10 @@ class StoreAdmin(admin.ModelAdmin):
     pass
 
 
-
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):

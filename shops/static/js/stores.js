@@ -138,7 +138,7 @@ function get_all_stores(){
                             <div class="info-area">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <a href="/stores/1">${store.name}</a>
+                                        <h5><a href="/stores/1/?auth_token=${auth_token}">${store.name}</a></h5>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="row" id="payment">
@@ -161,21 +161,23 @@ function get_all_stores(){
                                 <table class="table mt-30"><tbody>`
 
                     store.items.forEach(function(item, index){
-                        item_name = item.name;
-                        item_price = item.price
-                        single_store_html = single_store_html + `
-                        <tr>
-                            <td style="width: 70%">${item_name}</td>
-                            <td id=price_${store.id}${item.id} style="width: 10%">${item_price}</td>
-                            <td style="width: 10%">
-                                <div class="qty mt-5">
-                                    <input type="number" class="count" id=quantity_${store.id}${item.id} name="qty" value="1" onchange="quantity_change(${item.id}, ${store.id}, ${item.price})">
-                                </div>
-                            </td>
-                            <td style="width: 10%">
-                                <button type="button" class="btn btn-success" onclick="purchase_item(${store.id}, ${item.id}, ${item.price})">Purchase</button>
-                            </td>
-                        </tr>`
+                        if(item.followed_by.indexOf(user_id) != -1){
+                            item_name = item.name;
+                            item_price = item.price
+                            single_store_html = single_store_html + `
+                            <tr>
+                                <td style="width: 70%">${item_name}</td>
+                                <td id=price_${store.id}${item.id} style="width: 10%">${item_price}</td>
+                                <td style="width: 10%">
+                                    <div class="qty mt-5">
+                                        <input type="number" class="count" id=quantity_${store.id}${item.id} name="qty" value="1" onchange="quantity_change(${item.id}, ${store.id}, ${item.price})">
+                                    </div>
+                                </td>
+                                <td style="width: 10%">
+                                    <button type="button" class="btn btn-success" onclick="purchase_item(${store.id}, ${item.id}, ${item.price})">Purchase</button>
+                                </td>
+                            </tr>`
+                        }
                     })
                     single_store_html = single_store_html +
                         `<tr>
@@ -236,7 +238,6 @@ function add_new_store(){
 }
 
 $(document).ready( function(){
-    console.log(username)
     $.ajax({
         url: api_url + 'token/',
         contentType: "application/json",

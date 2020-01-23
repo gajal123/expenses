@@ -1,19 +1,19 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
+{% load static %}
 
-<!DOCTYPE html>
 <html lang="en">
-  <head>
+    <head>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>eCommerce Product Detail</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
-
-  </head>
+        <title>Store</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <link rel="stylesheet" href="{% static 'css/stores_detail.css' %}">
+    </head>
 
   <body>
 
@@ -21,37 +21,45 @@
 		<div class="card">
 			<div class="container-fliud">
 				<div class="wrapper row">
-					<div class="preview col-md-6">
+					<!--<div class="preview col-md-6">-->
 
-						<div class="preview-pic tab-content">
-						  <div class="tab-pane active" id="pic-1"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-2"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-3"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-4"><img src="http://placekitten.com/400/252" /></div>
-						  <div class="tab-pane" id="pic-5"><img src="http://placekitten.com/400/252" /></div>
-						</div>
-						<ul class="preview-thumbnail nav nav-tabs">
-						  <li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-2" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-3" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-4" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						  <li><a data-target="#pic-5" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>
-						</ul>
+						<!--<div class="preview-pic tab-content">-->
+						  <!--<div class="tab-pane active" id="pic-1"><img src="http://placekitten.com/400/252" /></div>-->
+						  <!--<div class="tab-pane" id="pic-2"><img src="http://placekitten.com/400/252" /></div>-->
+						  <!--<div class="tab-pane" id="pic-3"><img src="http://placekitten.com/400/252" /></div>-->
+						  <!--<div class="tab-pane" id="pic-4"><img src="http://placekitten.com/400/252" /></div>-->
+						  <!--<div class="tab-pane" id="pic-5"><img src="http://placekitten.com/400/252" /></div>-->
+						<!--</div>-->
+						<!--<ul class="preview-thumbnail nav nav-tabs">-->
+						  <!--<li class="active"><a data-target="#pic-1" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+						  <!--<li><a data-target="#pic-2" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+						  <!--<li><a data-target="#pic-3" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+						  <!--<li><a data-target="#pic-4" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+						  <!--<li><a data-target="#pic-5" data-toggle="tab"><img src="http://placekitten.com/200/126" /></a></li>-->
+						<!--</ul>-->
 
-					</div>
-					<div class="details col-md-6">
-						<h3 class="product-title">men's shoes fashion</h3>
-						<div class="rating">
-							<div class="stars">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>
-								<span class="fa fa-star"></span>
+					<!--</div>-->
+					<div class="details col-md-12">
+						<div class="row">
+							<div class="col-md-6">
+								<h3 class="shop-title"></h3>
 							</div>
-							<span class="review-no">41 reviews</span>
+							<div class="col-md-6">
+								<button type="button" class="btn btn-danger" onclick="unfollow_store()" style="float:right">Unfollow</button>
+							</div>
+
 						</div>
-						<p class="product-description">Suspendisse quos? Tempus cras iure temporibus? Eu laudantium cubilia sem sem! Repudiandae et! Massa senectus enim minim sociosqu delectus posuere.</p>
+						<div class="rating">
+							<!--<div class="stars">-->
+								<!--<span class="fa fa-star checked"></span>-->
+								<!--<span class="fa fa-star checked"></span>-->
+								<!--<span class="fa fa-star checked"></span>-->
+								<!--<span class="fa fa-star"></span>-->
+								<!--<span class="fa fa-star"></span>-->
+							<!--</div>-->
+							<span id="follower_number"></span>
+						</div>
+						<p class="shop_address"></p>
 						<h4 class="price">current price: <span>$180</span></h4>
 						<p class="vote"><strong>91%</strong> of buyers enjoyed this product! <strong>(87 votes)</strong></p>
 						<h5 class="sizes">sizes:
@@ -81,4 +89,6 @@
 <script>
     var user_id = {{ user_id }}
     var store_id = {{ store_id }}
+    var auth_token = "{{ auth_token }}"
 </script>
+<script src="{% static 'js/stores_detail.js' %}"></script>

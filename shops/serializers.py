@@ -33,8 +33,3 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
         fields = ('id', 'user', 'item', 'quantity', 'store', 'date_of_purchase', 'entry_type')
-
-
-
-
-

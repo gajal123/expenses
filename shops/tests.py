@@ -32,5 +32,6 @@ class StoreSerializerTest(TestCase):
             name='Juice shop', address='Bellandur', city='Bangalore'
         )
         self.serializer = StoreSerializer(self.juice_shop)
+
     def test(self):
         self.assertEqual(self.serializer.data.get('address'), self.juice_shop.address)
