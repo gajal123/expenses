@@ -138,7 +138,7 @@ function get_all_stores(){
                             <div class="info-area">
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6 col-sm-6">
-                                        <h4>${store.name}</h4>
+                                        <a href="/stores/1">${store.name}</a>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-6">
                                         <div class="row" id="payment">
